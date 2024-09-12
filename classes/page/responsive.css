@@ -7,14 +7,12 @@ main, .cp-sec {
     width: max-content;
     margin: auto;
     justify-content: center;
-    gap: 3px;
+    gap: 7px;
 }
 body {
     background-color: antiquewhite;
 }
 .cp {
-    width: max-content;
-    height: max-content;
     padding: 3px;
     border: 1px inset gray;
     border-radius: 5px;
@@ -33,13 +31,13 @@ button[type="button"] {
 p {
     margin: 3px 0 1px 12px;
 }
+table {
+    width: 100%;
+    margin-top: 1px;
+}
 table, tr, th, td {
     border-collapse: collapse;
     border: 1px inset gray;
-}
-tr {
-    width: 300px;
-    overflow-x: auto;
 }
 td {
     cursor: pointer;
@@ -49,7 +47,6 @@ td {
 }
 .cp-info {
     width: 380px;
-    height: max-content;
     padding: 5px;
     border: 1px inset gray;
     border-radius: 5px;
@@ -118,17 +115,21 @@ code {
     background-color: limegreen;
 }
 @media screen and (orientation: portrait) {
-    table {
-        width: 97%;
-    }
     main, .cp-sec {
         flex-direction: column;
-        width: 96.5%;
+        width: 100%;
     }
-    .cp-sec, .cp-info, .parent {
+    .cp {
         width: 100%;
     }
     .item select {
-        max-width: 82px;
+        max-width: calc((88vw - 90px) / 4);
+    }
+    .cp-info, .parent {
+        width: 100%;
+    }
+    
+    th {
+        min-width: 50px;
     }
 }
