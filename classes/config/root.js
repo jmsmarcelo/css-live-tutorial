@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 break;
         default:
             langScript += '_en.js';
-            break;
     }
     await loadScript(langScript);
     loadScript(pageFolder + fileName + '.js');

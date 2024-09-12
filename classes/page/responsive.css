@@ -2,39 +2,62 @@
     --width: auto;
     --height: auto;
 }
-body {
+main, .cp-sec {
     display: flex;
+    width: max-content;
+    margin: auto;
     justify-content: center;
+    gap: 3px;
 }
-aside {
+body {
+    background-color: antiquewhite;
+}
+.cp {
     width: max-content;
     height: max-content;
     padding: 3px;
+    border: 1px inset gray;
+    border-radius: 5px;
     box-sizing: border-box;
-    background-color: antiquewhite;
+    
 }
 h4 {
     margin: 7px 0 3px 0;
 }
+button[type="button"] {
+    margin: auto 7px auto 7px;
+    border-radius: 7px;
+    border: 1px solid gray;
+    cursor: pointer;
+}
 p {
-    margin: 3px 0px 1px 12px;
+    margin: 3px 0 1px 12px;
 }
 table, tr, th, td {
     border-collapse: collapse;
     border: 1px inset gray;
 }
+tr {
+    width: 300px;
+    overflow-x: auto;
+}
 td {
     cursor: pointer;
+}
+.item select {
+    max-width: 100px;
 }
 .cp-info {
     width: 380px;
     height: max-content;
     padding: 5px;
+    border: 1px inset gray;
+    border-radius: 5px;
     box-sizing: border-box;
-    background-color: thistle;
 }
-.cp-info code {
+code {
     font-weight: bold;
+    white-space: nowrap;
     padding: 0px 5px;
     border: 1px inset gray;
     border-radius: 5px;
@@ -42,7 +65,7 @@ td {
 }
 .p-info {
     text-indent: -12px;
-    margin: 3px 0px 1px 24px;
+    margin: 3px 0 1px 24px;
 }
 .parent {
     width: 300px;
@@ -70,18 +93,42 @@ td {
 .e {
     background-color: black;
 }
+.f {
+    background-color: blueviolet;
+}
+.g {
+    background-color: darkmagenta;
+}
+.h {
+    background-color: chocolate;
+}
+.i {
+    background-color: saddlebrown;
+}
+.j {
+    background-color: slategray;
+}
+.k {
+    background-color: lightseagreen;
+}
+.l {
+    background-color: teal;
+}
+.m {
+    background-color: limegreen;
+}
 @media screen and (orientation: portrait) {
-    body {
-        flex-direction: column;
+    table {
         width: 97%;
     }
-    aside {
+    main, .cp-sec {
+        flex-direction: column;
+        width: 96.5%;
+    }
+    .cp-sec, .cp-info, .parent {
         width: 100%;
     }
-    .cp-info {
-        width: 100%;
-    }
-    .parent {
-        width: 100%;
+    .item select {
+        max-width: 82px;
     }
 }

@@ -1,23 +1,25 @@
 const maps = {
     children: ['B', 'C', 'D', 'E'],
     container: {
+        'align-content': ['initial', 'stretch', 'center', 'flex-start', 'flex-end', 'space-between', 'space-around', 'space-evenly', 'inherit'],
+        'align-items': ['normal', 'stretch', 'center', 'flex-start', 'flex-end', 'start', 'end', 'baseline', 'initial', 'inherit'],
         'justify-content': ['initial', 'flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly', 'inherit']
     },
     item: {
-        'order': [1, 2, 3, 4]
+        'width': ['auto', '50px', '100px', '50%'],
+        'height': ['auto', '50px', '100px', '50%'],
+        'order': ['0', '1', '2', '3'],
+        'align-self': ['auto', 'stretch', 'center', 'flex-start', 'flex-end', 'baseline', 'initial', 'inherit'],
     },
     flex: {
         container: {
             'flex-direction': ['row', 'row-reverse', 'column', 'column-reverse'],
             'flex-wrap': ['nowrap', 'wrap', 'wrap-reverse'],
-            'align-items': ['stretch', 'flex-start', 'flex-end', 'center', 'baseline'],
-            'align-content': ['stretch', 'flex-start', 'flex-end', 'center', 'space-between', 'space-around']
         },
         item: {
-            'flex-grow': [0, 1, 2, 3],
-            'flex-shrink': [1, 0, 2, 3],
+            'flex-grow': ['0', '1', '2', '3'],
+            'flex-shrink': ['1', '0', '2', '3'],
             'flex-basis': ['auto', '50px', '100px'],
-            'align-self': ['auto', 'flex-start', 'flex-end', 'center', 'baseline', 'stretch'],
             'flex': ['0 1 auto', '0 1 50px', '0 1 100px', '1 0 auto', '1 0 50px', '1 0 100px']
         }
     },
@@ -27,9 +29,10 @@ const maps = {
             'grid-template-rows': ['none', 'auto auto', 'auto auto auto', '10% 15% 20% 30%'],
             'grid-template-areas': ['none', '\'boss boss . .\'', '\'. boss boss .\'', '\'. boss boss boss\''],
             'grid-template': ['none', '\'boss boss . \' \'boss boss . \'', '\'boss boss boss\' \'boss boss boss\''],
+            'justify-items': ['legacy', 'normal', 'stretch', 'start', 'left', 'center', 'end', 'right']
         },
         item: {
-            'grid-area': ['', 'boss']
+            'grid-area': ['auto', 'boss', '2/1/span 2/span 3']
         }
     }
 }
@@ -56,32 +59,36 @@ function createInfo(att) {
         cssInfo: ['cpInfo', 'span', [['textContent', text[att]]]]
     }, objs, objs);
 }
-function createSubInfo(p, pk) {
+function createSubInfo(t, p, c) {
     while(objs.cssInfo.children.length > 0) {
         objs.cssInfo.lastChild.remove();
     }
     const map = {};
-    map[`cpInfo${pk}`] = ['cssInfo', 'p', [['innerHTML', `<code>${pk}</code>:`]]];
-    map[`cpInfo${pk}Info`] = [`cpInfo${pk}`, 'p', [['textContent', p[pk].info]]];
-    map[`cpInfo${pk}Values`] = [`cpInfo${pk}`, 'p', [['textContent', text.values]]];
-    for(let k in p[pk].values) {
-        map[`cpInfo${pk}${k}`] = [`cpInfo${pk}Values`, 'p', [['classList', 'p-info'], ['innerHTML', `<code>${k}</code>: ${p[pk].values[k]}`]]]
+    map[`cpInfo${p}`] = ['cssInfo', 'p', [['innerHTML', `<code>${p}</code>:`]]];
+    map[`cpInfo${p}Info`] = [`cpInfo${p}`, 'p', [['innerHTML', text[c][p].info || text[c][p]]]];
+    map[`cpInfo${p}Values`] = [`cpInfo${p}`, 'p', [['textContent', text.values]]];
+    for(let k in t[p]) {
+        let textInfo = text[c][p][t[p][k]] || text[c][t[p][k]]
+        if(typeof textInfo !== 'undefined') {
+            map[`cpInfo${p}${k}`] = [`cpInfo${p}Values`, 'p', [['classList', 'p-info'], ['innerHTML', `<code>${t[p][k]}</code>: ${textInfo}`]]];
+        }
     }
     createObjs(map, objs, objs)
 }
-function getSelectedDisplay() {
-    return objs.cpParentDisplaySelect.value.split(': ')[1];
+function getText(c, p, k) {
+    if(text[c])
+    text[c][p][k]
 }
 function createControllerContainer(target) {
     Object.assign(target, maps.container);
     const targetController = {
-        cpParentDisplayContainerTable: ['cpParentDisplay', 'table'],
+        cpParentDisplayContainerTable: ['cpParentDisplay', 'table', [['classList', 'container']]],
         cpParentDisplayContainerTr: ['cpParentDisplayContainerTable', 'tr']
     }
     targetController['cpParentDisplayContainer'] = ['cpParentDisplayContainerTr', 'th', [['colSpan', 2], ['textContent', text.containerProperties]]];
     for(let p in target) {
         targetController[`cpParentDisplay${p}tr`] = ['cpParentDisplayContainerTable', 'tr'];
-        targetController[`cpParentDisplay${p}td`] = [`cpParentDisplay${p}tr`, 'td', [['onclick', function() {createSubInfo(text.containers, p)}], ['textContent', p + ': ']]];
+        targetController[`cpParentDisplay${p}td`] = [`cpParentDisplay${p}tr`, 'td', [['onclick', function() {createSubInfo(target, p, 'container')}], ['textContent', p + ': ']]];
         targetController[`cpParentDisplay${p}Value`] = [`cpParentDisplay${p}tr`, 'td'];
         targetController[`cpParentDisplay${p}Select`] = [`cpParentDisplay${p}Value`, 'select', [['onchange', function() {setStyle(objs.parent, this.value)}]]];
         for(let v of target[p]) {
@@ -91,24 +98,29 @@ function createControllerContainer(target) {
     createObjs(targetController, objs, objs);
 }
 function updateItems(vs, v, c, p) {
-    let ov = vs[c];
+    let ov = vs[c][p];
     for(let k in vs) {
-        if(vs[k] === v && p !== 'grid-area' ||
-            vs[k] === v && ov.split(':')[1] === '' && p === 'grid-area') {
-            vs[k] = ov;
+        if(vs[k][p] === v && p !== 'grid-area') {
+            vs[k][p] = ov;
+            objs[`cpParentDisplay${p}${k}Select`].value = ov;
+        } else if(p === 'grid-area' && k !== c && vs[k][p] !== 'auto' && ov.split(':')[1] === 'auto') {
+            vs[k][p] = ov;
             objs[`cpParentDisplay${p}${k}Select`].value = ov;
         }
     }
-    vs[c] = v;
+    vs[c][p] = v;
     maps.children.forEach(mc => {
-        setStyle(objs[`child${mc}`], vs[mc]);
+        setStyle(objs[`child${mc}`], vs[mc][p]);
     });
 }
 function createControllerItem(target) {
+    while(objs.cpParentDisplay.contains(objs.cpParentDisplayItemTable)) {
+        objs.cpParentDisplay.removeChild(objs.cpParentDisplayItemTable);
+    }
     Object.assign(target, maps.item);
     let values = {};
     const targetController = {
-        cpParentDisplayItemTable: ['cpParentDisplay', 'table'],
+        cpParentDisplayItemTable: ['cpParentDisplay', 'table', [['classList', 'item']]],
         cpParentDisplayItemTr: ['cpParentDisplayItemTable', 'tr']
     }
     targetController['cpParentDisplayItem'] = ['cpParentDisplayItemTr', 'th', [['colSpan', (maps.children.length + 1)], ['textContent', text.itemProperties]]];
@@ -119,9 +131,12 @@ function createControllerItem(target) {
     })
     for(let p in target) {
         targetController[`cpParentDisplay${p}tr`] = ['cpParentDisplayItemTable', 'tr'];
-        targetController[`cpParentDisplay${p}td`] = [`cpParentDisplay${p}tr`, 'td', [['onclick', function() {createSubInfo(text.items, p)}], ['textContent', p + ': ']]];
+        targetController[`cpParentDisplay${p}td`] = [`cpParentDisplay${p}tr`, 'td', [['onclick', function() {createSubInfo(target, p, 'item')}], ['textContent', p + ': ']]];
         let s = 0;
         maps.children.forEach(c => {
+            if(typeof values[c] === 'undefined') {
+                values[c] = {};
+            }
             let i = 0;
             targetController[`cpParentDisplay${p}${c}td`] = [`cpParentDisplay${p}tr`, 'td']
             targetController[`cpParentDisplay${p}${c}Select`] = [`cpParentDisplay${p}${c}td`, 'select', [['onchange', function() {
@@ -133,7 +148,7 @@ function createControllerItem(target) {
             }]]];
             for(let v of target[p]) {
                 let selected = false;
-                if(selected = (p === 'order' && i++ === s) || (p === 'grid-area' && typeof values[c] === 'undefined')) values[c] = `${p}:${v}`;
+                if(selected = (p === 'order' && i++ === s) || (p === 'grid-area' && typeof values[c][p] === 'undefined')) values[c][p] = `${p}:${v}`;
                 targetController[`cpParentDisplay${p}${c}${v}`] = [`cpParentDisplay${p}${c}Select`, 'option', [['selected', selected], ['value', `${p}:${v}`], ['textContent', v]]];
             }
             s++;
@@ -141,43 +156,74 @@ function createControllerItem(target) {
     }
     createObjs(targetController, objs, objs);
 }
+function parentReset() {
+    resetStyle(objs.parent);
+    maps.children.forEach(c => {
+        resetStyle(objs['child' + c]);
+    })
+    setStyle(objs.parent, objs.cpParentDisplaySelect.value);
+    setDisplayProperties();
+    createInfo(objs.cpParentDisplaySelect.value);
+}
+function createChildren() {
+    const mapChildren = {};
+    while(objs.parent.firstChild) {
+        objs.parent.firstChild.remove();
+    }
+    maps.children.forEach(c => {
+        mapChildren['child' + c] = ['parent', 'div', [['classList', c.toLowerCase()], ['textContent', c]]];
+    });
+    createObjs(mapChildren, objs, objs);
+}
 const objs = {}, root = document.querySelector(':root');
 createObjs({
-    cp: ['body', 'aside'],
+    main: ['body', 'main'],
+    cpSec: ['main', 'section', [['classList', 'cp-sec']]],
+    cp: ['cpSec', 'section', [['classList', 'cp']]],
 
     cpChild: ['cp', 'div'],
     cpChildTitle: ['cpChild', 'h4', [['textContent', text.children]]],
-    cpChildDisplay: ['cpChild', 'p', [['textContent', text.size]]],
-    cpChildDisplaySelect: ['cpChildDisplay', 'select', [['onchange', function() {setSizeChilds(this.value)}]]],
-    cpChildDisplayAuto: ['cpChildDisplaySelect', 'option', [['value', 'auto'], ['textContent', 'auto auto']]],
-    cpChildDisplay50: ['cpChildDisplaySelect', 'option', [['value', '50px'], ['textContent', '50px 50px']]],
-    cpChildDisplay110: ['cpChildDisplaySelect', 'option', [['value', '110px'], ['textContent', '110px 110px']]],
+    cpChildLength: ['cpChild', 'p', [['textContent', text.length]]],
+    cpChildLengthSelect: ['cpChildLength', 'select', [['onchange', function() {
+        maps.children = this.value.split(',');
+        maps.item.order = [];
+        for(let i = 0; i < maps.children.length; i++) {
+            maps.item.order.push(i);
+        }
+        createChildren();
+        createControllerItem(maps[objs.cpParentDisplaySelect.value.split(': ')[1]].item);
+    }]]],
+    chChildLengthOption4: ['cpChildLengthSelect', 'option', [['value', 'B,C,D,E'], ['textContent', '4']]],
+    chChildLengthOption8: ['cpChildLengthSelect', 'option', [['disabled', window.innerWidth < 1600], ['value', 'B,C,D,E,F,G,H,I'], ['textContent', '8']]],
+    chChildLengthOption12: ['cpChildLengthSelect', 'option', [['disabled', window.innerWidth < 2000], ['value', 'B,C,D,E,F,G,H,I,J,K,L,M'], ['textContent', '12']]],
 
     cpParent: ['cp', 'div'],
     cpParentTitle: ['cpParent', 'h4', [['textContent', text.parent]]],
+    cpParentReset: ['cpParentTitle', 'button', [['type', 'button'], ['textContent', text.reset], ['onclick', function() {
+        parentReset();
+    }]]],
+    cpParentInfoShowHide: ['cpParentTitle', 'button', [['type', 'button'], ['textContent', '[-] ' + text.info], ['onclick', function() {
+        if(objs.cpInfo.style.display === 'none') {
+            objs.cpInfo.style.display = 'block';
+            this.textContent = this.textContent.replace(/\[\+\]/, '[-]');
+        } else {
+            objs.cpInfo.style.display = 'none';
+            this.textContent = this.textContent.replace(/\[\-\]/, '[+]');
+        }
+    }]]],
 
     cpParentDisplay: ['cpParent', 'p', [['textContent', 'Display: ']]],
     cpParentDisplaySelect: ['cpParentDisplay', 'select', [['onchange', function() {
-        resetStyle(objs.parent);
-        resetStyle(objs.childB);
-        resetStyle(objs.childC);
-        resetStyle(objs.childD);
-        resetStyle(objs.childE);
-        setStyle(objs.parent, this.value);
-        setDisplayProperties();
-        createInfo(this.value.split(': ')[1]);
+        parentReset();
     }]]],
     cpParentDisplayFlex: ['cpParentDisplaySelect', 'option', [['value', 'display: flex'], ['textContent', 'flex']]],
-    cpParentDisplayGrid: ['cpParentDisplaySelect', 'option', [['disabled', true], ['value', 'display: grid'], ['textContent', 'grid']]],
+    cpParentDisplayGrid: ['cpParentDisplaySelect', 'option', [['defaultSelected', true], ['value', 'display: grid'], ['textContent', 'grid']]],
 
-    cpInfo: ['body', 'section', [['classList', 'cp-info']]],
+    cpInfo: ['cpSec', 'section', [['classList', 'cp-info']]],
 
-    parent: ['body', 'section', [['classList', 'parent']]],
-    childB: ['parent', 'div', [['classList', 'b'], ['textContent', 'B']]],
-    childC: ['parent', 'div', [['classList', 'c'], ['textContent', 'C']]],
-    childD: ['parent', 'div', [['classList', 'd'], ['textContent', 'D']]],
-    childE: ['parent', 'div', [['classList', 'e'], ['textContent', 'E']]]
+    parent: ['main', 'section', [['classList', 'parent']]],
 }, objs, document);
+createChildren();
 setStyle(objs.parent, objs.cpParentDisplaySelect.value);
 setDisplayProperties();
-createInfo(getSelectedDisplay());
+createInfo(objs.cpParentDisplaySelect.value);
