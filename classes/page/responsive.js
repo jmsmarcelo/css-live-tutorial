@@ -3,18 +3,22 @@ const maps = {
     container: {
         'align-content': ['initial', 'stretch', 'center', 'flex-start', 'flex-end', 'space-between', 'space-around', 'space-evenly', 'inherit'],
         'align-items': ['normal', 'stretch', 'center', 'flex-start', 'flex-end', 'start', 'end', 'baseline', 'initial', 'inherit'],
-        'justify-content': ['initial', 'flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly', 'inherit']
+        'justify-content': ['initial', 'flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'space-evenly', 'inherit'],
+        'row-gap': ['normal', '3px', '10px', '3%'],
+        'column-gap': ['normal', '3px', '10px', '3%'],
+        'gap': ['normal', '3px 10px', '10px 3px', '3%']
     },
     item: {
-        'width': ['auto', '50px', '100px', '50%'],
-        'height': ['auto', '50px', '100px', '50%'],
+        'width': ['auto', '50px', '50%'],
+        'height': ['auto', '50px', '50%'],
         'order': ['0', '1', '2', '3'],
-        'align-self': ['auto', 'stretch', 'center', 'flex-start', 'flex-end', 'baseline', 'initial', 'inherit'],
+        'align-self': ['auto', 'stretch', 'center', 'flex-start', 'flex-end', 'baseline', 'initial', 'inherit']
     },
     flex: {
         container: {
             'flex-direction': ['row', 'row-reverse', 'column', 'column-reverse'],
             'flex-wrap': ['nowrap', 'wrap', 'wrap-reverse'],
+            'flex-flow': ['row nowrap', 'row-reverse wrap', 'column wrap', 'column-reverse wrap-reverse']
         },
         item: {
             'flex-grow': ['0', '1', '2', '3'],
@@ -217,7 +221,7 @@ createObjs({
         parentReset();
     }]]],
     cpParentDisplayFlex: ['cpParentDisplaySelect', 'option', [['value', 'display: flex'], ['textContent', 'flex']]],
-    cpParentDisplayGrid: ['cpParentDisplaySelect', 'option', [['defaultSelected', true], ['value', 'display: grid'], ['textContent', 'grid']]],
+    cpParentDisplayGrid: ['cpParentDisplaySelect', 'option', [['value', 'display: grid'], ['textContent', 'grid']]],
 
     cpInfo: ['cpSec', 'section', [['classList', 'cp-info']]],
 

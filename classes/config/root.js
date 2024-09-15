@@ -1,10 +1,10 @@
 document.addEventListener('DOMContentLoaded', async () => {
     let langScript = langFolder + fileName;
     switch(userLang) {
-        case 'pt':
+        /*case 'pt':
             case 'pt-BR':
                 langScript += '_pt.js';
-                break;
+                break; */
         default:
             langScript += '_en.js';
     }

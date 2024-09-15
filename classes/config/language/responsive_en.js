@@ -14,6 +14,7 @@ const text = {
     container: {
         'flex-direction': 'Specifies the direction of the flexible items.',
         'flex-wrap': 'Specifies whether the flexible items should wrap or not.',
+        'flex-flow': 'Is a shorthand property for: <code>flex-direction</code> and <code>flex-wrap</code>.',
         'justify-content': 'aligns the flexible container\'s items when the items do not use all available space on the main-axis (horizontally).',
         'align-items': 'Specifies the default alignment for items inside a flexbox or grid container.',
         'align-content': 'Controls the spacing between lines/columns in a flex container with multiple lines/columns. Applies only when there are multiple lines or columns of items. In the <code>flex-wrap</code> the value cannot be <code>nowrap</code>.',
@@ -22,6 +23,9 @@ const text = {
         'grid-template-areas': 'Specifies areas within the grid layout. You can name grid items by using the <code>grid-area</code> property',
         'grid-template': "Is a shorthand property for the following properties: <code>grid-template-rows</code> and <code>grid-template-columns</code> or <code>grid-template-areas</code>",
         'justify-items': 'Is set on the grid container to give child elements (grid items) alignment in the inline direction. For this property to have any alignment effect, the grid items need available space around themselves in the inline direction.',
+        'row-gap': 'Specifies the gap between the rows in a flexbox or grid layout.',
+        'column-gap': 'Specifies the gap between the columns in grid, flexbox or multi-column layout.',
+        'gap': 'Defines the size of the gap between the rows and between the columns in flexbox, grid or multi-column layout. It is a shorthand for the following properties: <code>row-gap</code> and <code>column-gap</code>.',
 
         'row': '(default) Left to right,',
         'row-reverse': 'Right to left.',
@@ -30,6 +34,7 @@ const text = {
         'nowrap': '(default) All items are kept on a single line/column.',
         'wrap': 'Items wrap onto a new line/column when necessary.',
         'wrap-reverse': 'Items wrap onto a new line/column in the reverse direction.',
+        'row nowrap': 'Default value.',
         'flex-start': 'Aligns items to the start of the container.',
         'flex-end': 'Aligns items to the end of the container.',
         'center': 'Centers items within the container.',
@@ -37,7 +42,8 @@ const text = {
         'space-around': 'Distributes space around items, including space before the first and after the last item.',
         'space-evenly': 'Distributes space evenly between items, with equal space on all sides.',
         'initial': 'Sets this property to its default value.',
-        'inherit': 'Inherits this property from its parent element.'
+        'inherit': 'Inherits this property from its parent element.',
+        'normal': 'Default value.'
     },
     item: {
         'order': {
@@ -72,9 +78,22 @@ const text = {
             '1 0 auto': 'sets the item to grow, not shrink, and use the auto width/height.'
         },
         'grid-area': {
-            info: 'Specifies a grid item\'s size and location in a grid layout, and is a shorthand property for the following properties: <code>grid-row-start</code>, <code>grid-row-end</code>, <code>grid-column-start</code> and <code>grid-column-end</code>. Can also be used to assign a name to a grid item: <code>grid-template-areas</code>',
+            info: 'Specifies a grid item\'s size and location in a grid layout, and is a shorthand property for the following properties: <code>grid-row-start</code>, <code>grid-row-end</code>, <code>grid-column-start</code> and <code>grid-column-end</code>. Can also be used to assign a name to a grid item: <code>grid-template-areas</code>.',
             'auto': 'Default value.',
-            'boss': 'Specifies a name for the grid item.'
+            'boss': 'Specifies a name for the grid item.',
+            '2/1/span 2/span 3': 'The syntax is <code>grid-row-start</code> / <code>grid-column-start</code> / <code>grid-row-end</code> / <code>grid-column-end</code>. Start on row 2 and column 1, and span 2 rows and 3 columns.'
+        },
+        'width': {
+            info: 'Sets the width of an element.',
+            'auto': 'Default value. The browser calculates the width.',
+            '50px': 'Defines the width in pixels of the containing block.',
+            '50%': 'Defines the width in percent of the containing block.'
+        },
+        'height': {
+            info: 'Sets the height of an element.',
+            'auto': 'Default value. The browser calculates the height.',
+            '50px': 'Defines the height in pixels of the containing block.',
+            '50%': 'Defines the height in percent of the containing block.',
         }
     }
 };
